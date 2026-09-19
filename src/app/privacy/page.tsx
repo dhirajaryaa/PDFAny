@@ -5,7 +5,7 @@ import { SITE } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "PDFAny is 100% client-side. Files never leave your device — no uploads, no tracking, no analytics, no accounts.",
+    "PDFAny is 100% client-side. Files never leave your device — no uploads, no advertising, no accounts. Only cookieless page-view counts from Vercel Analytics.",
 };
 
 const sections = [
@@ -54,17 +54,21 @@ const sections = [
     title: "What we collect",
     body: (
       <>
-        <p><strong>Nothing.</strong> {SITE.brand} has:</p>
+        <p><strong>Nothing about your files — only anonymized page-view counts.</strong> {SITE.brand} uses:</p>
         <ul className="list-disc space-y-1 pl-5">
           <li>no accounts, logins, or profiles</li>
-          <li>no analytics, tracking pixels, or fingerprinting</li>
+          <li>no tracking pixels, cookies, or fingerprinting</li>
           <li>no advertising</li>
-          <li>no cookies — not even a consent banner&apos;s worth</li>
-          <li>no logging of your activity</li>
+          <li>no logging of your activity or document content</li>
         </ul>
         <p>
-          No data is collected, stored, sold, or shared with anyone. There is no data to delete because
-          there is no data to begin with.
+          <a href="https://vercel.com/docs/analytics" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+            Vercel Analytics
+          </a>{" "}
+          tallies aggregate, cookieless page views so we know which tools people use. It sees only that a page
+          was loaded — never the contents or names of your files. Page views are processed in batches and
+          stored without cookies or personal identifiers. We keep no other data: there is nothing to collect,
+          sell, or share, and nothing to delete.
         </p>
       </>
     ),

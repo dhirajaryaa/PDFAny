@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { MotionConfig } from "motion/react";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Header, Footer } from "@/components/layout";
 import { SITE } from "@/lib/tools";
@@ -107,6 +108,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </MotionConfig>
+        <Analytics />
       </body>
     </html>
   );
