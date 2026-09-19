@@ -18,6 +18,12 @@ export async function generateMetadata({
     keywords: tool.keywords,
     alternates: { canonical: url },
     openGraph: {
+      type: "website",
+      locale: "en_US",
+      url,
+      siteName: SITE.name,
+      title: `${tool.name} — ${tool.tagline}`,
+      description: tool.description,
       images: [
         {
           url: `${url}/opengraph-image`,

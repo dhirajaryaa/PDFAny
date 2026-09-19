@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
+import { motion } from "motion/react";
 import { TOOL_BY_SLUG, type ToolMeta } from "@/lib/tools";
 import { BackLink, Spinner } from "@/components/ui";
 import { iconMap } from "@/lib/icons";
@@ -55,7 +56,14 @@ export function ToolShell({ slug }: { slug: string }) {
             {icon ? icon("h-6 w-6") : null}
           </span>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{meta.name}</h1>
+            <motion.h1
+              initial={{ opacity: 0, filter: "blur(10px)", y: 6 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="text-2xl font-bold tracking-tight sm:text-3xl"
+            >
+              {meta.name}
+            </motion.h1>
             <p className="text-[15px] text-muted">{meta.tagline}</p>
           </div>
         </div>

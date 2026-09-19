@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { motion } from "motion/react";
 import { Search, ShieldCheck, Zap, WifiOff } from "lucide-react";
 import { TOOLS, CATEGORIES, type Category } from "@/lib/tools";
-import { ToolIcon } from "@/lib/icons";
+import { ToolCard } from "@/components/ToolCard";
 
 const TRUST = [
   { icon: ShieldCheck, label: "Your files never leave your device" },
@@ -48,11 +48,16 @@ export default function HomePage() {
               <ShieldCheck className="h-3.5 w-3.5 text-success" />
               100% in your browser — nothing is ever uploaded
             </span>
-            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            <motion.h1
+              initial={{ opacity: 0, filter: "blur(12px)", y: 10 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl"
+            >
               Every PDF tool you need.
               <br />
               <span className="text-accent">Private by default.</span>
-            </h1>
+            </motion.h1>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               Merge, split, rotate, sign and edit PDFs free. All processing happens
               locally on your device — so your documents never leave your computer.
@@ -127,29 +132,7 @@ export default function HomePage() {
               </h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {group.tools.map((tool) => (
-                  <Link
-                    key={tool.slug}
-                    href={`/${tool.slug}`}
-                    className="group flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-                  >
-                    <div className="flex items-start justify-between">
-                      <span
-                        className="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style={{ backgroundColor: `${tool.accent}1a`, color: tool.accent }}
-                      >
-                        <ToolIcon slug={tool.slug} className="h-5 w-5" />
-                      </span>
-                      <span className="text-muted-2 transition-transform group-hover:translate-x-0.5 group-hover:text-accent">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold tracking-tight">{tool.name}</h3>
-                      <p className="mt-1 text-[13px] leading-relaxed text-muted">{tool.tagline}</p>
-                    </div>
-                  </Link>
+                  <ToolCard key={tool.slug} tool={tool} />
                 ))}
               </div>
             </section>

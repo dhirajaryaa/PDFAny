@@ -3,7 +3,7 @@ import { Lock, PackageOpen, Server, ShieldCheck } from "lucide-react";
 import { SITE } from "@/lib/tools";
 
 export const metadata: Metadata = {
-  title: `Privacy Policy — ${SITE.brand}`,
+  title: "Privacy Policy",
   description:
     "PDFAny is 100% client-side. Files never leave your device — no uploads, no tracking, no analytics, no accounts.",
 };

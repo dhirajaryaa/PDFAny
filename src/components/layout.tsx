@@ -52,7 +52,7 @@ export function Header() {
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-5 sm:px-8">
         <Brand />
         <nav className="flex items-center gap-1 text-sm text-muted" aria-label="Main">
-          <Link href="/" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">
+          <Link href="/tools" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">
             Tools
           </Link>
           <Link href="/privacy" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">
@@ -79,7 +79,7 @@ export function Footer() {
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <Brand />
           <nav className="flex items-center justify-center gap-1 text-sm text-muted md:justify-end" aria-label="Footer">
-            <Link href="/" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">
+            <Link href="/tools" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">
               Tools
             </Link>
             <Link href="/privacy" className="rounded-md px-3 py-1.5 transition-colors hover:bg-surface-muted hover:text-foreground">

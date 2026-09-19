@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { MotionConfig } from "motion/react";
 import "./globals.css";
 import { Header, Footer } from "@/components/layout";
 import { SITE } from "@/lib/tools";
@@ -149,9 +150,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Header />
-        {children}
-        <Footer />
+        <MotionConfig reducedMotion="user">
+          <Header />
+          {children}
+          <Footer />
+        </MotionConfig>
       </body>
     </html>
   );

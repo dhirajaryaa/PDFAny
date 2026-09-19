@@ -20,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
   urls.push({
+    url: `${SITE.domain}/tools`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.9,
+  });
+  urls.push({
     url: `${SITE.domain}/privacy`,
     lastModified: now,
     changeFrequency: "yearly",
