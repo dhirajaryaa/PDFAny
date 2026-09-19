@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { SITE } from "@/lib/tools";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -21,19 +22,14 @@ function BrandIcon({ name, className = "h-4 w-4" }: { name: keyof typeof BRAND_P
 
 export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} aria-hidden>
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#6366f1" />
-          <stop offset="1" stopColor="#a855f7" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#logoGrad)" />
-      <rect x="2" y="2" width="60" height="60" rx="15" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-      <text x="32" y="45" fontFamily="Arial, Helvetica, sans-serif" fontSize="36" fontWeight="800" fill="#ffffff" textAnchor="middle">
-        P
-      </text>
-    </svg>
+    <Image
+      src="/logo-mark.webp"
+      alt="PDFAny logo"
+      width={256}
+      height={256}
+      className={`${className} dark:invert`}
+      priority
+    />
   );
 }
 

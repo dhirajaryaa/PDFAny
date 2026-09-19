@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_DATA_URI } from "@/lib/logo";
 
 const AVATAR = "https://github.com/dhirajaryaa.png";
 
@@ -25,22 +26,8 @@ export function buildOgImage(opts: {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 56,
-              height: 56,
-              borderRadius: 16,
-              backgroundImage: "linear-gradient(135deg, #6366f1, #a855f7)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 30,
-              fontWeight: 800,
-              color: "#ffffff",
-            }}
-          >
-            P
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element -- inline data-URI raster (brand logo) */}
+          <img src={LOGO_DATA_URI} alt="" width={56} height={56} style={{ borderRadius: 16 }} />
           <span style={{ fontSize: 30, fontWeight: 700 }}>PDFAny</span>
           <span style={{ fontSize: 24, color: "#9ca3af" }}>· Free PDF tools</span>
         </div>
