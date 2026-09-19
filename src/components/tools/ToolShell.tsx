@@ -71,6 +71,19 @@ export function ToolShell({ slug }: { slug: string }) {
             {meta.longDescription}
           </p>
         </div>
+        <section aria-labelledby="how-to" className="mt-6 max-w-2xl">
+          <h2 id="how-to" className="text-lg font-semibold tracking-tight">{meta.how}</h2>
+          <ol className="mt-3 space-y-2 text-[14px] leading-relaxed text-muted">
+            {meta.steps.map((step, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">
+                  {i + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
       </div>
       <Content meta={meta} />
     </main>
