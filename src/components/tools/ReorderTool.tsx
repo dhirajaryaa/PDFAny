@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FileDropzone } from "@/components/FileDropzone";
 import { Button, Card, SectionHeading } from "@/components/ui";
@@ -10,18 +10,21 @@ import { reorderPdf } from "@/lib/pdf";
 import type { ToolMeta } from "@/lib/tools";
 import { usePdfFile } from "@/hooks/usePdfFile";
 
-export default function ReorderTool({ meta }: { meta: ToolMeta }) {
+export default function ReorderTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [order, setOrder] = useState<number[]>([]);
+  const [orderKey, setOrderKey] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<File[] | null>(null);
 
   const count = pageCount ?? 0;
 
-  useEffect(() => {
-    if (pageCount !== null) setOrder(Array.from({ length: pageCount }, (_, i) => i));
-  }, [pageCount]);
+  const fileKey = `${file?.name ?? ""}:${file?.lastModified ?? 0}`;
+  if (fileKey && orderKey !== fileKey && pageCount !== null) {
+    setOrderKey(fileKey);
+    setOrder(Array.from({ length: pageCount }, (_, i) => i));
+  }
 
   function move(pos: number, dir: -1 | 1) {
     setOrder((prev) => {

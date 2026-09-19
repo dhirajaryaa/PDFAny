@@ -46,7 +46,7 @@ const TOOLS: { id: Tool; label: string; icon: typeof Pencil }[] = [
   { id: "arrow", label: "Arrow", icon: ArrowUpRight },
 ];
 
-export default function EditTool({ meta }: { meta: ToolMeta }) {
+export default function EditTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [page, setPage] = useState(1);
   const [byPage, setByPage] = useState<Record<number, Ann[]>>({});
@@ -94,7 +94,7 @@ export default function EditTool({ meta }: { meta: ToolMeta }) {
         const png = await renderAnnotationsToPng(itemsArr, m.widthPx, m.heightPx);
         bytes = await overlayImageOnBytes(bytes, Number(key), png, m.pageW, m.pageH);
       }
-      setResult([new File([bytes], "edited.pdf", { type: "application/pdf" })]);
+      setResult([new File([new Uint8Array(bytes)], "edited.pdf", { type: "application/pdf" })]);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Export failed.");
     } finally {
@@ -415,8 +415,6 @@ function Annotator({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, color, metrics]);
 
-  const sizeOf = (k: "pen" | "highlight") => (k === "highlight" ? 20 : 3.5);
-
   function commitText() {
     if (!draft || !textValue.trim()) {
       setDraft(null);
@@ -502,7 +500,7 @@ function Annotator({
             }}
             onClick={(e) => e.stopPropagation()}
             placeholder="Type…"
-            className="absolute z-10 min-w-40 border-2 border-accent bg-white/95 px-2 py-1 outline-none"
+            className="absolute z-10 min-w-40 border-2 border-accent bg-surface/95 px-2 py-1 outline-none"
             style={{
               left: draft.x,
               top: draft.y,

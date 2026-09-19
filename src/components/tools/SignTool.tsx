@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Eraser } from "lucide-react";
 import { FileDropzone } from "@/components/FileDropzone";
 import { Button, Card, SectionHeading, Badge } from "@/components/ui";
@@ -25,7 +25,7 @@ interface PlacementState {
   signatureHeightRatio: number;
 }
 
-export default function SignTool({ meta }: { meta: ToolMeta }) {
+export default function SignTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [page, setPage] = useState(1);
   const [result, setResult] = useState<File[] | null>(null);
@@ -33,9 +33,7 @@ export default function SignTool({ meta }: { meta: ToolMeta }) {
   const [error, setError] = useState<string | null>(null);
   const [sig, setSig] = useState<string | null>(null);
   const placementRef = useRef<PlacementState | null>(null);
-  const pageRef = useRef(1);
 
-  pageRef.current = page;
   const total = pageCount ?? 0;
 
   async function doApply() {
@@ -53,7 +51,7 @@ export default function SignTool({ meta }: { meta: ToolMeta }) {
         pageH - (ps.py + ps.widthCss * ps.signatureHeightRatio) / scalePdfToPx;
       const pdfW = ps.widthCss / scalePdfToPx;
       const bytes = dataUrlToBytes(sig);
-      const out = await placeImageOnPdf(file, pageRef.current - 1, {
+      const out = await placeImageOnPdf(file, page - 1, {
         imageBytes: bytes,
         imageMime: "image/png",
         x: pdfX,
@@ -99,7 +97,7 @@ export default function SignTool({ meta }: { meta: ToolMeta }) {
         <>
           <section className="space-y-3">
             <SectionHeading step={2} title="Draw your signature" />
-            <SignaturePad value={sig} onChange={setSig} />
+            <SignaturePad onChange={setSig} />
           </section>
 
           {sig ? (
@@ -197,6 +195,17 @@ function PagePlacement({
   const [placed, setPlaced] = useState<{ px: number; py: number; widthCss: number } | null>(null);
   const drag = useRef<{ mode: "move" | "resize"; startCX: number; startCY: number; ow: number; px: number; py: number } | null>(null);
 
+  const laid = useMemo(() => {
+    if (!metrics) return null;
+    if (placed) return placed;
+    const w = Math.round(metrics.widthPx * 0.3);
+    return {
+      px: Math.round((metrics.widthPx - w) / 2),
+      py: Math.round(metrics.heightPx * 0.45),
+      widthCss: w,
+    };
+  }, [metrics, placed]);
+
   const render = useCallback(async () => {
     const doc = await getPdfDocument(file);
     const pdfPage = await doc.getPage(page);
@@ -219,23 +228,15 @@ function PagePlacement({
   }, [render]);
 
   useEffect(() => {
-    if (!metrics) return;
-    const w = Math.round(metrics.widthPx * 0.3);
-    const x = Math.round((metrics.widthPx - w) / 2);
-    const y = Math.round(metrics.heightPx * 0.45);
-    setPlaced({ px: x, py: y, widthCss: w });
-  }, [metrics]);
-
-  useEffect(() => {
-    if (metrics && placed) {
-      onState({ metrics, px: placed.px, py: placed.py, widthCss: placed.widthCss, signatureHeightRatio: SIG_RATIO });
+    if (metrics && laid) {
+      onState({ metrics, px: laid.px, py: laid.py, widthCss: laid.widthCss, signatureHeightRatio: SIG_RATIO });
     }
-  }, [metrics, placed, onState]);
+  }, [metrics, laid, onState]);
 
-  const widthCss = placed?.widthCss ?? 150;
+  const widthCss = laid?.widthCss ?? 150;
   const heightCss = widthCss * SIG_RATIO;
-  const left = placed?.px ?? 0;
-  const top = placed?.py ?? 0;
+  const left = laid?.px ?? 0;
+  const top = laid?.py ?? 0;
 
   return (
     <div className="overflow-x-auto rounded-2xl border border-border bg-surface-muted">
@@ -245,8 +246,9 @@ function PagePlacement({
         style={{ touchAction: "none" }}
       >
         <canvas ref={canvasRef} className="block h-auto w-full" style={{ width: "100%" }} />
-        {metrics && placed ? (
+        {metrics && laid ? (
           <>
+            {/* eslint-disable-next-line @next/next/no-img-element -- data-URI signature overlay, draggable/resizable */}
             <img
               src={sig}
               alt="Signature"
@@ -284,6 +286,9 @@ function PagePlacement({
             <div
               role="slider"
               aria-label="Resize signature"
+              aria-valuemin={20}
+              aria-valuemax={metrics.widthPx - left}
+              aria-valuenow={widthCss}
               onPointerDown={(e) => {
                 e.preventDefault();
                 drag.current = {
@@ -314,7 +319,7 @@ function PagePlacement({
   );
 }
 
-function SignaturePad({ value, onChange }: { value: string | null; onChange: (v: string | null) => void }) {
+function SignaturePad({ onChange }: { onChange: (v: string | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
 

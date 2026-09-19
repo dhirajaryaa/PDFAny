@@ -13,7 +13,7 @@ interface ImgItem {
   url: string;
 }
 
-export default function ImagesToPdfTool({ meta }: { meta: ToolMeta }) {
+export default function ImagesToPdfTool({ meta: _meta }: { meta: ToolMeta }) {
   const [items, setItems] = useState<ImgItem[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FileDropzone } from "@/components/FileDropzone";
 import { Button, Card, SectionHeading } from "@/components/ui";
 import { PageGrid } from "@/components/PageGrid";
@@ -22,7 +22,7 @@ const SIZES: { id: PaperSize; label: string }[] = [
 
 type Source = "blank" | "pdf";
 
-export default function InsertTool({ meta }: { meta: ToolMeta }) {
+export default function InsertTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [source, setSource] = useState<Source>("blank");
   const [size, setSize] = useState<PaperSize>("A4");
@@ -39,9 +39,12 @@ export default function InsertTool({ meta }: { meta: ToolMeta }) {
   const total = pageCount ?? 0;
   const pos = position ?? total;
 
-  useEffect(() => {
-    if (pageCount !== null) setPosition(pageCount);
-  }, [pageCount]);
+  const fileKey = `${file?.name ?? ""}:${file?.lastModified ?? 0}`;
+  const [posKey, setPosKey] = useState("");
+  if (fileKey && posKey !== fileKey && pageCount !== null) {
+    setPosKey(fileKey);
+    setPosition(pageCount);
+  }
 
   function onSrcFiles(files: File[]) {
     const f = files[0];

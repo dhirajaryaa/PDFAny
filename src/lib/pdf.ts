@@ -1,10 +1,4 @@
-import {
-  PDFDocument,
-  degrees,
-  StandardFonts,
-  rgb,
-  type PDFPage,
-} from "pdf-lib";
+import { PDFDocument, degrees, StandardFonts, rgb } from "pdf-lib";
 
 export type Angle = 90 | 180 | 270;
 
@@ -13,7 +7,7 @@ export const PAPER_SIZES = {
   Letter: { width: 612, height: 792 },
   Legal: { width: 612, height: 1008 },
   Square: { width: 612, height: 612 },
-} as const;
+};
 
 export type PaperSize = keyof typeof PAPER_SIZES;
 
@@ -42,18 +36,12 @@ export async function readFile(f: File | Blob): Promise<Uint8Array> {
   return new Uint8Array(buf);
 }
 
-export async function openPdf(
-  f: File | Blob,
-  password?: string,
-  skipEncrypted = false
-): Promise<PDFDocument> {
+export async function openPdf(f: FileLike | Blob, ignoreEncryption = false): Promise<PDFDocument> {
   try {
-    const opts: Parameters<typeof PDFDocument.load>[1] = {
-      ignoreEncryption: skipEncrypted,
+    return await PDFDocument.load(await readFile(f), {
+      ignoreEncryption,
       updateMetadata: false,
-    };
-    if (password) opts.password = password;
-    return await PDFDocument.load(await readFile(f), opts);
+    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     if (/encrypted|password/i.test(msg)) {
@@ -77,7 +65,16 @@ export async function save(doc: PDFDocument, name: string): Promise<File> {
     useObjectStreams: true,
     addDefaultPage: false,
   });
-  return new File([bytes], name, { type: "application/pdf" });
+  return toFile(bytes, name);
+}
+
+function toFile(bytes: Uint8Array, name: string): File {
+  return new File([toBlobPart(bytes)], name, { type: "application/pdf" });
+}
+
+function toBlobPart(bytes: Uint8Array): BlobPart {
+  // copy into a fresh ArrayBuffer-backed typed array
+  return new Uint8Array(bytes);
 }
 
 function assertPageIndex(doc: PDFDocument, index: number) {
@@ -276,7 +273,9 @@ export async function rangePdf(f: FileLike, range: Range): Promise<File> {
 }
 
 export function blankPageSize(size: PaperSize, landscape = false) {
-  let { width, height } = PAPER_SIZES[size];
+  const dims = PAPER_SIZES[size];
+  let width: number = dims.width;
+  let height: number = dims.height;
   if (landscape) [width, height] = [height, width];
   return { width, height };
 }
@@ -408,7 +407,7 @@ export async function overlayImageOnPdf(
   pageHeight: number
 ): Promise<File> {
   const bytes = await overlayImageOnBytes(await readFile(f), pageIndex, pngBytes, pageWidth, pageHeight);
-  return new File([bytes], "edited.pdf", { type: "application/pdf" });
+  return toFile(bytes, "edited.pdf");
 }
 
 /** Rasterize an annotation overlay PNG onto a page of raw PDF bytes. */
@@ -432,31 +431,59 @@ export async function overlayImageOnBytes(
   return doc.save({ useObjectStreams: true, addDefaultPage: false });
 }
 
-export async function protectPdf(
+/** Add page numbers to the bottom of every page. */
+export async function addPageNumbersPdf(
   f: FileLike,
-  password: string,
-  opts: { allowPrinting?: boolean; allowCopying?: boolean } = {}
+  opts: { start: number; position: "bottom-left" | "bottom-center" | "bottom-right" | "top-right" }
 ): Promise<File> {
   const doc = await openPdf(f);
-  doc.encrypt({
-    userPassword: password,
-    ownerPassword: password,
-    permissions: {
-      printing: opts.allowPrinting ?? true,
-      modifying: false,
-      copying: opts.allowCopying ?? true,
-      annotating: true,
-      fillingForms: true,
-      contentAccessibility: true,
-      documentAssembly: false,
-    },
-  });
-  return save(doc, "protected.pdf");
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const size = 11;
+  const padding = 20;
+  for (let i = 0; i < doc.getPageCount(); i++) {
+    const page = doc.getPage(i);
+    const { width, height } = page.getSize();
+    const label = String(opts.start + i);
+    const textWidth = font.widthOfTextAtSize(label, size);
+    let x = padding;
+    let y = padding;
+    if (opts.position === "bottom-center") x = (width - textWidth) / 2;
+    if (opts.position === "bottom-right" || opts.position === "top-right") x = width - textWidth - padding;
+    if (opts.position === "top-right") y = height - padding - size;
+    page.drawText(label, {
+      x,
+      y,
+      size,
+      font,
+      color: rgb(0.35, 0.35, 0.38),
+    });
+  }
+  return save(doc, "numbered.pdf");
 }
 
-export async function unlockPdf(f: FileLike, password: string): Promise<File> {
-  const doc = await openPdf(f, password, false);
-  return save(doc, "unlocked.pdf");
+/** Draw a text watermark across every page. */
+export async function watermarkPdf(
+  f: FileLike,
+  opts: { text: string; opacity: number }
+): Promise<File> {
+  const doc = await openPdf(f);
+  const font = await doc.embedFont(StandardFonts.HelveticaBold);
+  const size = 64;
+  for (let i = 0; i < doc.getPageCount(); i++) {
+    const page = doc.getPage(i);
+    const { width, height } = page.getSize();
+    const textWidth = font.widthOfTextAtSize(opts.text, size);
+    page.drawText(opts.text, {
+      x: (width - textWidth) / 2,
+      y: height / 2,
+      size,
+      font,
+      opacity: Math.max(0.05, Math.min(0.5, opts.opacity)),
+      rotate: degrees(-30),
+      color: rgb(0.4, 0.4, 0.43),
+    });
+  }
+  return save(doc, "watermarked.pdf");
 }
 
 export function downloadFile(file: File, revoke = true): void {

@@ -14,7 +14,7 @@ interface DocItem {
   pages: number | null;
 }
 
-export default function MergeTool({ meta }: { meta: ToolMeta }) {
+export default function MergeTool({ meta: _meta }: { meta: ToolMeta }) {
   const [docs, setDocs] = useState<DocItem[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

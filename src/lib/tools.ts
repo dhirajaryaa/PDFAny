@@ -1,8 +1,4 @@
-export type Category =
-  | "organize"
-  | "convert"
-  | "secure"
-  | "annotate";
+export type Category = "organize" | "convert" | "annotate";
 
 export interface ToolMeta {
   slug: string;
@@ -16,10 +12,12 @@ export interface ToolMeta {
   accent: string;
 }
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfany.app").replace(/\/+$/, "");
+
 export const SITE = {
   name: "PDFAny",
   brand: "PDFAny",
-  domain: "https://pdfany.app",
+  domain: SITE_URL,
   tagline: "Free, private PDF tools that run 100% in your browser.",
   description:
     "Merge, split, rotate, sign and edit PDFs for free. Everything is processed locally on your device — your documents never leave your computer.",
@@ -29,7 +27,6 @@ export const CATEGORIES: { id: Category; label: string }[] = [
   { id: "organize", label: "Organize" },
   { id: "annotate", label: "Annotate" },
   { id: "convert", label: "Convert" },
-  { id: "secure", label: "Secure" },
 ];
 
 export const TOOLS: ToolMeta[] = [
@@ -202,27 +199,27 @@ export const TOOLS: ToolMeta[] = [
     accent: "#34d399",
   },
   {
-    slug: "protect",
-    name: "Protect PDF",
-    tagline: "Lock PDFs with a password",
-    description: "Add a password so only people you trust can open or edit it.",
+    slug: "page-numbers",
+    name: "Add Page Numbers",
+    tagline: "Number every page in seconds",
+    description: "Add page numbers to the bottom or top of every page.",
     longDescription:
-      "Encrypt your PDF with a password. Restrict printing and copying too if you want.",
-    keywords: ["password protect pdf", "encrypt pdf", "lock pdf", "pdf password"],
-    category: "secure",
-    categoryLabel: "Secure",
+      "Number every page of your PDF automatically. Pick a starting number and a position — bottom-left, centered, right, or top-right — and download the result.",
+    keywords: ["add page numbers", "page numbers pdf", "number pages", "insert page numbers"],
+    category: "annotate",
+    categoryLabel: "Annotate",
     accent: "#eab308",
   },
   {
-    slug: "unlock",
-    name: "Unlock PDF",
-    tagline: "Remove password protection",
-    description: "Unlock a password-protected PDF and save a plain copy.",
+    slug: "watermark",
+    name: "Watermark PDF",
+    tagline: "Stamp text across every page",
+    description: "Add a semi-transparent text watermark to your document.",
     longDescription:
-      "Open a password-protected PDF on your own device and save an unlocked copy. The password is only used locally.",
-    keywords: ["unlock pdf", "remove password pdf", "decrypt pdf"],
-    category: "secure",
-    categoryLabel: "Secure",
+      "Place a diagonal text watermark such as DRAFT or CONFIDENTIAL across every page of your PDF, with adjustable opacity.",
+    keywords: ["watermark pdf", "add watermark", "draft"],
+    category: "annotate",
+    categoryLabel: "Annotate",
     accent: "#14b8a6",
   },
 ];

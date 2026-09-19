@@ -20,8 +20,8 @@ export function PageThumb({ file, pageIndex, maxWidth = 460, className = "" }: P
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
+      const t = window.setTimeout(() => setVisible(true), 0);
+      return () => window.clearTimeout(t);
     }
     const io = new IntersectionObserver(
       (entries) => {

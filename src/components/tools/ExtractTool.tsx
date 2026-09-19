@@ -9,7 +9,7 @@ import { extractPdf } from "@/lib/pdf";
 import type { ToolMeta } from "@/lib/tools";
 import { usePdfFile } from "@/hooks/usePdfFile";
 
-export default function ExtractTool({ meta }: { meta: ToolMeta }) {
+export default function ExtractTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [busy, setBusy] = useState(false);

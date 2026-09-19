@@ -8,7 +8,7 @@ import { reversePdf } from "@/lib/pdf";
 import type { ToolMeta } from "@/lib/tools";
 import { usePdfFile } from "@/hooks/usePdfFile";
 
-export default function ReverseTool({ meta }: { meta: ToolMeta }) {
+export default function ReverseTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

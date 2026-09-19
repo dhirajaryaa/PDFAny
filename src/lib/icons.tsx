@@ -13,13 +13,15 @@ import {
   Pencil,
   FileImage,
   FileType2,
-  Lock,
-  Unlock,
+  Hash,
+  Droplet,
   type LucideIcon,
 } from "lucide-react";
 
 function make(Icon: LucideIcon) {
-  return (className: string) => <Icon className={className} aria-hidden />;
+  const Glyph = (className: string) => <Icon className={className} aria-hidden />;
+  Glyph.displayName = `ToolGlyph_${Icon.displayName ?? Icon.name ?? "Icon"}`;
+  return Glyph;
 }
 
 export const iconMap: Record<string, (className: string) => React.ReactNode> = {
@@ -37,8 +39,8 @@ export const iconMap: Record<string, (className: string) => React.ReactNode> = {
   edit: make(Pencil),
   "images-to-pdf": make(FileImage),
   "pdf-to-images": make(FileType2),
-  protect: make(Lock),
-  unlock: make(Unlock),
+  "page-numbers": make(Hash),
+  watermark: make(Droplet),
 };
 
 export function ToolIcon({ slug, className }: { slug: string; className?: string }) {

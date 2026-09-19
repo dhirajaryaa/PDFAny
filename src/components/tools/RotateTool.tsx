@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FileDropzone } from "@/components/FileDropzone";
 import { Button, Card, SectionHeading } from "@/components/ui";
 import { PageGrid } from "@/components/PageGrid";
@@ -21,7 +21,7 @@ const PRESETS: Preset[] = [
   { label: "180°", angle: 180, direction: "cw" },
 ];
 
-export default function RotateTool({ meta }: { meta: ToolMeta }) {
+export default function RotateTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [preset, setPreset] = useState<Preset>(PRESETS[0]);
@@ -32,10 +32,12 @@ export default function RotateTool({ meta }: { meta: ToolMeta }) {
   const count = pageCount ?? 0;
   const all = useMemo(() => new Set(Array.from({ length: count }, (_, i) => i)), [count]);
 
-  useEffect(() => {
-    if (pageCount !== null) setSelected(all);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageCount]);
+  const fileKey = `${file?.name ?? ""}:${file?.lastModified ?? 0}`;
+  const [selKey, setSelKey] = useState("");
+  if (fileKey && selKey !== fileKey && pageCount !== null) {
+    setSelKey(fileKey);
+    setSelected(new Set(Array.from({ length: pageCount }, (_, i) => i)));
+  }
 
   const toggle = (i: number) =>
     setSelected((prev) => {
@@ -47,8 +49,6 @@ export default function RotateTool({ meta }: { meta: ToolMeta }) {
 
   function changeFile(files: File[]) {
     load(files);
-    setSelected(all);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }
 
   async function doRotate() {

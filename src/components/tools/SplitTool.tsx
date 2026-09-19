@@ -16,7 +16,7 @@ import { usePdfFile } from "@/hooks/usePdfFile";
 
 type Mode = "pages" | "ranges";
 
-export default function SplitTool({ meta }: { meta: ToolMeta }) {
+export default function SplitTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [mode, setMode] = useState<Mode>("pages");
   const [input, setInput] = useState("");

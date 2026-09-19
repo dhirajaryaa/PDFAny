@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { FileDropzone } from "@/components/FileDropzone";
 import { Button, Card, SectionHeading } from "@/components/ui";
-import { downloadFilesAsZip, ResultPanel } from "@/components/Result";
+import { ResultPanel } from "@/components/Result";
 import type { ToolMeta } from "@/lib/tools";
 import { usePdfFile } from "@/hooks/usePdfFile";
 import { exportPdfPageAsJpeg } from "@/lib/pdfjs";
 
-export default function PdfToImagesTool({ meta }: { meta: ToolMeta }) {
+export default function PdfToImagesTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [scale, setScale] = useState(2);
   const [quality, setQuality] = useState(0.92);

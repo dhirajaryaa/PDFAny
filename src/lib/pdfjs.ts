@@ -27,7 +27,9 @@ export function getPdfDocument(f: File | Blob): Promise<PDFDocumentProxy> {
   const key = fileKey(f);
   let p = docCache.get(key);
   if (!p) {
-    p = getDocument({ data: f.slice(0), isEvalSupported: false }).promise;
+    p = f
+      .arrayBuffer()
+      .then((data) => getDocument({ data }).promise);
     docCache.set(key, p);
     p.catch(() => docCache.delete(key));
   }
@@ -144,7 +146,7 @@ export async function releasePdf(f: File | Blob): Promise<void> {
     docCache.delete(key);
     try {
       const doc = await p;
-      await doc.destroy();
+      await doc.loadingTask.destroy();
     } catch {
       /* ignore */
     }

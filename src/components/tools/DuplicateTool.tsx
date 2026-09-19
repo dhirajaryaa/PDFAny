@@ -9,7 +9,7 @@ import { duplicatePdf } from "@/lib/pdf";
 import type { ToolMeta } from "@/lib/tools";
 import { usePdfFile } from "@/hooks/usePdfFile";
 
-export default function DuplicateTool({ meta }: { meta: ToolMeta }) {
+export default function DuplicateTool({ meta: _meta }: { meta: ToolMeta }) {
   const { file, pageCount, load, reset } = usePdfFile();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [copies, setCopies] = useState(1);
