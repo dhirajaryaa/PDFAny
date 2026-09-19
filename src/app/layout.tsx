@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     description: SITE.description,
     images: [
       {
-        url: "/opengraph-image",
+        url: `${SITE.domain}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: SITE.name,
@@ -69,15 +69,15 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE.name} — Free, private, in-browser PDF tools`,
     description: SITE.description,
-    images: ["/opengraph-image"],
+    images: [`${SITE.domain}/opengraph-image`],
   },
   alternates: {
     canonical: SITE.domain,
   },
   category: "technology",
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    shortcut: "/icon.svg",
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    shortcut: "/logo.png",
     apple: [{ url: "/apple-touch-icon.png" }],
   },
 };
@@ -91,46 +91,6 @@ export const viewport: Viewport = {
   ],
 };
 
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.domain,
-    description: SITE.description,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE.domain}/?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: SITE.name,
-    applicationCategory: "UtilityApplication",
-    operatingSystem: "Any",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    description: SITE.description,
-    url: SITE.domain,
-    featureList:
-      "Merge PDF, split PDF, sign PDF, edit PDF, rotate PDF and more — all in your browser.",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "@id": "https://dhirajarya.in/#dhirajarya",
-    name: "Dhiraj Arya",
-    url: "https://dhirajarya.in",
-    sameAs: [
-      "https://github.com/dhirajaryaa",
-      "https://twitter.com/dhirajarya01",
-      "https://linkedin.com/in/dhirajarya01",
-      "https://youtube.com/@dhirajaryaa",
-    ],
-  },
-];
-
 export default function RootLayout({
   children,
 }: {
@@ -142,15 +102,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',!!d);}catch(e){}})();`,
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         <MotionConfig reducedMotion="user">
           <Header />
           {children}

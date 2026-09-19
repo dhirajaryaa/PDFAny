@@ -22,7 +22,7 @@ export const SITE = {
   domain: SITE_URL,
   tagline: "Free, private PDF tools that run 100% in your browser.",
   description:
-    "Merge, split, rotate, sign and edit PDFs for free. Everything is processed locally on your device — your documents never leave your computer.",
+    "Merge, split, rotate, sign and edit PDFs free. All tools run in your browser — files never leave your device.",
 };
 
 export const CATEGORIES: { id: Category; label: string }[] = [

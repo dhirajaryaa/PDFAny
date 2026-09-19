@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "npx serve@latest out",
     "preview": "npx serve@latest out -l 3571",
     "lint": "eslint"
   },
@@ -23,8 +24,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "clsx": "^2.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

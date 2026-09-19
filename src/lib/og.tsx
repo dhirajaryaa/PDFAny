@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { LOGO_DATA_URI } from "@/lib/logo";
+import { LOGO_DATA_URI_INVERTED } from "@/lib/logo";
 
 const AVATAR = "https://github.com/dhirajaryaa.png";
 
@@ -26,8 +26,8 @@ export function buildOgImage(opts: {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- inline data-URI raster (brand logo) */}
-          <img src={LOGO_DATA_URI} alt="" width={56} height={56} style={{ borderRadius: 16 }} />
+          {/* eslint-disable-next-line @next/next/no-img-element -- inline data-URI raster (brand logo, inverted for dark OG card) */}
+          <img src={LOGO_DATA_URI_INVERTED} alt="" width={56} height={56} style={{ borderRadius: 16 }} />
           <span style={{ fontSize: 30, fontWeight: 700 }}>PDFAny</span>
           <span style={{ fontSize: 24, color: "#9ca3af" }}>· Free PDF tools</span>
         </div>

@@ -20,14 +20,14 @@ function BrandIcon({ name, className = "h-4 w-4" }: { name: keyof typeof BRAND_P
   );
 }
 
-export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
+export function LogoMark({ className = "size-7" }: { className?: string }) {
   return (
     <Image
-      src="/logo-mark.webp"
+      src="/logo.webp"
       alt="PDFAny logo"
-      width={256}
-      height={256}
-      className={`${className} dark:invert`}
+      width={232}
+      height={232}
+      className={`invert-0 dark:invert-100 ${className}`}
       priority
     />
   );
