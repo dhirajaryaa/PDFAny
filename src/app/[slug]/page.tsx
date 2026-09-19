@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { TOOL_BY_SLUG, SITE, type ToolMeta } from "@/lib/tools";
+import { TOOLS, TOOL_BY_SLUG, SITE, type ToolMeta } from "@/lib/tools";
 import { ToolShell } from "@/components/tools/ToolShell";
+
+export function generateStaticParams() {
+  return TOOLS.map((tool) => ({ slug: tool.slug }));
+}
 
 export async function generateMetadata({
   params,

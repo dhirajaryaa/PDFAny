@@ -1,8 +1,13 @@
-import { TOOL_BY_SLUG } from "@/lib/tools";
+import { TOOLS, TOOL_BY_SLUG } from "@/lib/tools";
 import { buildOgImage } from "@/lib/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+  return TOOLS.map((tool) => ({ slug: tool.slug }));
+}
 
 export default async function ToolOpengraphImage({
   params,

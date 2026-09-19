@@ -6,11 +6,12 @@ Client-side PDF toolkit. Everything runs 100% in the browser — no server proce
 - Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · pnpm only.
 - `motion` (motion/react) — animations: blur-fade h1 on home/tool pages (ToolShell, homepage), scroll-reveal + hover/tap micro-interactions via `ToolCard`. Wrap app in `<MotionConfig reducedMotion="user">` (root layout). `fresh install` adds `motion` as a dependency (single install).
 - `pdf-lib` — all PDF mutations. `pdfjs-dist` v6 — rendering/thumbnails (worker via `new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url)`). `lucide-react` icons. `jszip` (lazy) — zip downloads.
-- `next/og` ImageResponse for `opengraph-image` / `twitter-image` + per-tool variants in `[slug]/`.
+- `next/og` ImageResponse for `opengraph-image` / `twitter-image` + per-tool variants in `[slug]/`. Logo embedded as **PNG** data-URI (`src/lib/logo.ts` from `public/logo.png`) — an image/webp data-URI breaks the build-time render here (no sharp); keep PNG. Brand mark in the header is `public/logo-mark.webp` via `next/image` with `dark:invert`.
 
 ## Commands
-- `pnpm dev` · `pnpm build` · `pnpm start` · `pnpm lint`
-- Site URL from `.env.local` -> `NEXT_PUBLIC_SITE_URL` (default `https://pdfany.app`). See `.env.example`. `SITE.domain` in `src/lib/tools.ts` is the single consumer; canonical/sitemap/robots/OG all read it.
+- `pnpm dev` · `pnpm build` · `pnpm lint` · `pnpm preview` (serves the exported `out/` on :3571 via `serve`)
+- **Fully static**: `next.config.ts` uses `output: "export"` (+ `images.unoptimized`). Every page, all 33 OG/twitter images (root + 16 tools × 2), `sitemap.xml`, `robots.txt` are generated **once at build time** into `out/`. Tool pages use `generateStaticParams`; metadata-image/robots/sitemap route handlers set `export const dynamic = "force-static"`. No runtime requests to generate anything.
+- Site URL from `.env.local` -> `NEXT_PUBLIC_SITE_URL` (default `https://pdfany.app`). See `.env.example`. `SITE.domain` in `src/lib/tools.ts` is the single consumer; canonical/sitemap/robots/OG all read it. Used verbatim in the exported HTML — set the real domain before building.
 
 ## Structure (src/...)
 - `lib/tools.ts` — `SITE`, category list, `TOOLS` + `TOOL_BY_SLUG` registry (16 tools: merge, split, extract, delete, reorder, duplicate, rotate, reverse, insert, range, sign, edit, images-to-pdf, pdf-to-images, page-numbers, watermark). **Add/remove tools here AND in `components/tools/ToolShell.tsx` dynamic map AND `lib/icons.tsx`.** Every tool needs `description`, `longDescription`, `keywords`, `how` (H2 heading, natural "How to …" keyword phrase) + `steps` (3-4 unique steps, rendered as the `<ol id="how-to">` on each tool page for SEO content depth).
