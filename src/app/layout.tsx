@@ -4,6 +4,7 @@ import { MotionConfig } from "motion/react";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Header, Footer } from "@/components/layout";
+import { PwaRegister } from "@/components/PwaRegister";
 import { SITE } from "@/lib/tools";
 
 const geistSans = Geist({
@@ -76,6 +77,13 @@ export const metadata: Metadata = {
     canonical: SITE.domain,
   },
   category: "technology",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "PDFAny",
+    statusBarStyle: "default",
+  },
+  formatDetection: { telephone: false },
   icons: {
     icon: [{ url: "/logo.png", type: "image/png" }],
     shortcut: "/logo.png",
@@ -109,6 +117,7 @@ export default function RootLayout({
           <Footer />
         </MotionConfig>
         <Analytics />
+        <PwaRegister />
       </body>
     </html>
   );
